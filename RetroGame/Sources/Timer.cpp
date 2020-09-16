@@ -1,0 +1,43 @@
+/////////////////////////////
+// Author: Liam Bansal
+// Date Created: 20/05/2020
+/////////////////////////////
+
+// Includes.
+#include "Timer.h"
+
+Timer::Timer() : m_pDeltaTime(nullptr),
+	m_runLength(0.0)
+{}
+
+Timer::~Timer()
+{}
+
+// Updates the timer's delta time and total run length.
+void Timer::Update(float* a_pDeltaTime)
+{
+	m_pDeltaTime = a_pDeltaTime;
+	m_runLength += (*a_pDeltaTime);
+}
+
+// Resets the timer's total run length to zero.
+void Timer::Reset()
+{
+	m_runLength = 0.0f;
+}
+
+// Returns the length of time (in seconds) between the two most recent 
+// Update calls.
+float Timer::GetDeltaTime() const
+{
+	if (m_pDeltaTime)
+	{
+		return *m_pDeltaTime;
+	}
+}
+
+// Returns the total length of time the timer has been running.
+double Timer::GetRunLength() const
+{
+	return m_runLength;
+}
