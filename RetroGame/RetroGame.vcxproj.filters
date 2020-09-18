@@ -31,12 +31,6 @@
     <Filter Include="Source Files\Grid">
       <UniqueIdentifier>{def9cd46-e670-46b5-9250-ac67f6763ddf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\States">
-      <UniqueIdentifier>{fe6537d1-e3c1-4d71-a074-a056b34cafe8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\States">
-      <UniqueIdentifier>{db112ae3-767b-45e1-9677-49980fc9ad08}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Enemies\Managers">
       <UniqueIdentifier>{813c33f0-3b4a-40c6-a81c-c4476d0e3f4b}</UniqueIdentifier>
     </Filter>
@@ -48,6 +42,12 @@
     </Filter>
     <Filter Include="Header Files\Enemies\Base Classes">
       <UniqueIdentifier>{e9be28eb-4157-4728-ad7d-02997d5a8765}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game States">
+      <UniqueIdentifier>{fe6537d1-e3c1-4d71-a074-a056b34cafe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game States">
+      <UniqueIdentifier>{db112ae3-767b-45e1-9677-49980fc9ad08}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,19 +82,19 @@
       <Filter>Source Files\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="Sources\SplashState.cpp">
-      <Filter>Source Files\States</Filter>
+      <Filter>Source Files\Game States</Filter>
     </ClCompile>
     <ClCompile Include="Sources\MenuState.cpp">
-      <Filter>Source Files\States</Filter>
+      <Filter>Source Files\Game States</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GameplayState.cpp">
-      <Filter>Source Files\States</Filter>
+      <Filter>Source Files\Game States</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GameStateManager.cpp">
-      <Filter>Source Files\States</Filter>
+      <Filter>Source Files\Game States</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GameState.cpp">
-      <Filter>Source Files\States</Filter>
+      <Filter>Source Files\Game States</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Button.cpp">
       <Filter>Source Files\UI</Filter>
@@ -103,7 +103,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sources\PauseState.cpp">
-      <Filter>Source Files\States</Filter>
+      <Filter>Source Files\Game States</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Spider.cpp">
       <Filter>Source Files\Enemies</Filter>
@@ -128,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Centipede.cpp">
       <Filter>Source Files\Enemies\Base Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\PopUpText.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -162,19 +165,19 @@
       <Filter>Header Files\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Includes\GameplayState.h">
-      <Filter>Header Files\States</Filter>
+      <Filter>Header Files\Game States</Filter>
     </ClInclude>
     <ClInclude Include="Includes\SplashState.h">
-      <Filter>Header Files\States</Filter>
+      <Filter>Header Files\Game States</Filter>
     </ClInclude>
     <ClInclude Include="Includes\MenuState.h">
-      <Filter>Header Files\States</Filter>
+      <Filter>Header Files\Game States</Filter>
     </ClInclude>
     <ClInclude Include="Includes\GameStateManager.h">
-      <Filter>Header Files\States</Filter>
+      <Filter>Header Files\Game States</Filter>
     </ClInclude>
     <ClInclude Include="Includes\GameState.h">
-      <Filter>Header Files\States</Filter>
+      <Filter>Header Files\Game States</Filter>
     </ClInclude>
     <ClInclude Include="Includes\Button.h">
       <Filter>Header Files\UI</Filter>
@@ -183,7 +186,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Includes\PauseState.h">
-      <Filter>Header Files\States</Filter>
+      <Filter>Header Files\Game States</Filter>
     </ClInclude>
     <ClInclude Include="Includes\Spider.h">
       <Filter>Header Files\Enemies</Filter>
@@ -208,6 +211,9 @@
     </ClInclude>
     <ClInclude Include="Includes\Enemy.h">
       <Filter>Header Files\Enemies\Base Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="Includes\PopUpText.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

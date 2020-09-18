@@ -12,6 +12,7 @@
 #include "Grid.h"
 #include "MenuState.h"
 #include "PauseState.h"
+#include "PopUpText.h"
 
 GameplayState::GameplayState() : GameState(),
 	m_pBugBlaster(nullptr),
@@ -95,6 +96,22 @@ void GameplayState::Update(float a_deltaTime)
 			{
 				m_pBugBlaster->Update(this,	&a_deltaTime, m_pGrid);
 			}
+
+			// Updates pop-up scores.
+			for (auto listIterator = m_scores.begin();
+				listIterator != m_scores.end();
+				++listIterator)
+			{
+				if (!listIterator->IsActive())
+				{
+					m_scores.erase(listIterator);
+					break;
+				}
+				else
+				{
+					listIterator->Update(GetManager()->GetTimer()->GetDeltaTime());
+				}
+			}
 		}
 		else
 		{
@@ -109,7 +126,7 @@ void GameplayState::Draw()
 	if (m_pManager && m_pGrid)
 	{
 		// Clears previously drawn sprites.
-		m_pManager->Clear(olc::BLACK);
+		m_pManager->Clear(olc::BLACK); // TODO: do I need this
 		// Enables alpha blending.
 		m_pManager->SetPixelMode(olc::Pixel::ALPHA);
 
@@ -129,6 +146,14 @@ void GameplayState::Draw()
 			m_pBugBlaster->DrawLives(this);
 		}
 
+		// Draw the pop-up scores.
+		for (auto listIterator = m_scores.begin();
+			listIterator != m_scores.end();
+			++listIterator)
+		{
+			listIterator->Draw(this);
+		}
+
 		if (m_pScore)
 		{
 			m_pScore->Draw();
@@ -145,6 +170,11 @@ void GameplayState::ExitState()
 		m_pManager->StatesChanged(true);
 		m_pManager->RemoveState(this);
 	}
+}
+
+void GameplayState::AddScore(PopUpText a_text)
+{
+	m_scores.push_back(a_text);
 }
 
 Grid* GameplayState::GetGrid() const

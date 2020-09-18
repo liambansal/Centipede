@@ -11,6 +11,7 @@
 #include "GameplayState.h"
 #include "GameState.h"
 #include "Grid.h"
+#include "PopUpText.h"
 #include "Score.h"
 
 CentipedeBody::CentipedeBody() : Centipede(),
@@ -44,25 +45,26 @@ CentipedeBody::~CentipedeBody()
 {}
 
 // Updates the centipede's position, collisions, animation and spawning.
-void CentipedeBody::Update(GameplayState* a_pState,
+void CentipedeBody::Update(GameplayState* a_pGameplayState,
 	Grid* a_pGrid,
 	CentipedeBody* a_pForwardBody,
 	float* a_pDeltaTime)
 {
 	if (GetHealth() <= 0)
 	{
-		Split(a_pState, a_pGrid);
+		a_pGameplayState->AddScore(PopUpText(std::to_string(m_uiScoreValue), m_position));
+		Split(a_pGameplayState, a_pGrid);
 	}
 	else // Continue updating while health is above 0.
 	{
-		if (a_pState &&
+		if (a_pGameplayState &&
 			m_targetCells.size() > 0)
 		{
 			Move(a_pGrid, a_pForwardBody, a_pDeltaTime);
 			m_animator.Update(a_pDeltaTime);
 			m_pSprite = m_animator.GetCurrentFrame();
 			CheckTargetCollision(a_pGrid);
-			a_pState->GetBugBlaster()->CalculateFireRate(a_pGrid);
+			a_pGameplayState->GetBugBlaster()->CalculateFireRate(a_pGrid);
 		}
 	}
 }

@@ -16,6 +16,7 @@
 class BugBlaster;
 class Grid;
 class MenuState;
+class PopUpText;
 class Score;
 
 class GameplayState : public GameState
@@ -35,6 +36,7 @@ public:
 	// Draws the state's enemies, bug blaster, score and grid.
 	void Draw();
 	void ExitState();
+	void AddScore(PopUpText a_text);
 	Grid* GetGrid() const;
 	Score* GetScore() const;
 	BugBlaster* GetBugBlaster() const;
@@ -50,6 +52,7 @@ private:
 	CentipedeManager m_centipedeManager;
 	SpiderManager m_spiderManager;
 	FleaManager m_fleaManager;
+	std::list<PopUpText> m_scores;
 };
 
 #endif // !GAMEPLAY_STATE_H.

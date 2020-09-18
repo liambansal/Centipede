@@ -11,6 +11,7 @@
 #include "GameplayState.h"
 #include "GameStateManager.h"
 #include "Grid.h"
+#include "PopUpText.h"
 #include "Score.h"
 
 CentipedeHead::CentipedeHead() : Centipede(),
@@ -84,22 +85,23 @@ void CentipedeHead::operator=(const CentipedeHead* a_rCentipede)
 
 // Updates the centipede head & bodies' positions, collisions, animations and
 // deaths.
-void CentipedeHead::Update(GameplayState* a_pState, 
+void CentipedeHead::Update(GameplayState* a_pGameplayState, 
 	Grid* a_pGrid,
 	float* a_pDeltaTime)
 {
-	if (a_pState && a_pState->GetBugBlaster())
+	if (a_pGameplayState && a_pGameplayState->GetBugBlaster())
 	{
 		if (m_uiHealth <= 0)
 		{
-			DestroyThis(a_pState, a_pGrid);
+			a_pGameplayState->AddScore(PopUpText(std::to_string(m_uiScoreValue), m_position));
+			DestroyThis(a_pGameplayState, a_pGrid);
 		}
 		else
 		{
 			Move(a_pGrid, a_pDeltaTime);
 			m_animator.Update(a_pDeltaTime);
 			m_pSprite = m_animator.GetCurrentFrame();
-			a_pState->GetBugBlaster()->CalculateFireRate(a_pGrid);
+			a_pGameplayState->GetBugBlaster()->CalculateFireRate(a_pGrid);
 			CheckBoundaryCollisions(a_pGrid);
 			CheckObjectCollision(a_pGrid);
 
@@ -119,7 +121,7 @@ void CentipedeHead::Update(GameplayState* a_pState,
 					{
 						// Must isolate and dereference the iterator before we can 
 						// access it's value.
-						(*listIterator)->Update(a_pState,
+						(*listIterator)->Update(a_pGameplayState,
 							a_pGrid,
 							// Using ternary operator sends a pointer to the previous 
 							// body part if we're not examining the first body part.

@@ -9,6 +9,7 @@
 #include "GameplayState.h"
 #include "Grid.h"
 #include "RandGenerator.h"
+#include "PopUpText.h"
 #include "Score.h"
 
 Flea::Flea() : Enemy(),
@@ -48,6 +49,7 @@ void Flea::Update(GameplayState* a_pGameplayState,
 		{
 			if (a_pGameplayState->GetScore() && m_pFleaManager)
 			{
+				a_pGameplayState->AddScore(PopUpText(std::to_string(m_uiScoreValue), m_position));
 				a_pGameplayState->GetScore()->Update(m_uiScoreValue);
 				m_pFleaManager->SpawnFlea(a_pGrid);
 				m_uiHealth = mc_uiMaxHealth;

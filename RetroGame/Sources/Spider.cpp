@@ -9,6 +9,7 @@
 #include "GameplayState.h"
 #include "Grid.h"
 #include <list>
+#include "PopUpText.h"
 #include "Score.h"
 #include "Vector2D.h"
 
@@ -54,6 +55,19 @@ void Spider::Update(GameplayState* a_pGameplayState,
 {
 	if (m_uiHealth <= 0)
 	{
+		// TODO: turn into function. start...
+		unsigned int arrayLength = sizeof(m_fDistances) / sizeof(float);
+
+		for (unsigned int i = 0; i < arrayLength; ++i)
+		{
+			if (GetDistance(a_pGameplayState->GetBugBlaster()) >=
+				m_fDistances[i])
+			{
+				a_pGameplayState->AddScore(PopUpText(std::to_string(m_uiScores[i]), m_position));
+			}
+		}
+		//...end
+
 		Destroy(a_pGameplayState,
 			a_pGrid,
 			true);

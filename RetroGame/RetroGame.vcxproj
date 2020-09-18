@@ -172,6 +172,7 @@
     <ClCompile Include="Sources\MenuState.cpp" />
     <ClCompile Include="Sources\Mushroom.cpp" />
     <ClCompile Include="Sources\PauseState.cpp" />
+    <ClCompile Include="Sources\PopUpText.cpp" />
     <ClCompile Include="Sources\RandGenerator.cpp" />
     <ClCompile Include="Sources\GameState.cpp" />
     <ClCompile Include="Sources\Score.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Includes\Mushroom.h" />
     <ClInclude Include="Includes\olcPixelGameEngine.h" />
     <ClInclude Include="Includes\PauseState.h" />
+    <ClInclude Include="Includes\PopUpText.h" />
     <ClInclude Include="Includes\RandGenerator.h" />
     <ClInclude Include="Includes\GameState.h" />
     <ClInclude Include="Includes\BugBlaster.h" />
