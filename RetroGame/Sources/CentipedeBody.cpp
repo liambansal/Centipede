@@ -64,7 +64,6 @@ void CentipedeBody::Update(GameplayState* a_pGameplayState,
 			m_animator.Update(a_pDeltaTime);
 			m_pSprite = m_animator.GetCurrentFrame();
 			CheckTargetCollision(a_pGrid);
-			a_pGameplayState->GetBugBlaster()->CalculateFireRate(a_pGrid);
 		}
 	}
 }

@@ -26,7 +26,7 @@ Grid::Grid() : mc_uiCellWidth(8),
 	mc_uiXOrigin(4),
 	mc_uiYOrigin(20),
 	mc_uiBlasterZoneHeight(10),
-	mc_fMushroomSpawnChance(3.3f),
+	mc_fMushroomSpawnChance(4.3f),
 	m_bDrawn(false)
 {
 	if (m_cells) // Null check pointer.

@@ -44,7 +44,7 @@ public:
 	// Checks for collisions with objects in cell's adjacent the bug blaster.
 	// and handles different collision events.
 	void CheckForCollisions(Grid* a_pGrid);
-	// Calculates the fire rate based on the distance of the closest object 
+	// Calculates a reload time based on the distance of the closest object 
 	// along the bug blaster's y axis.
 	void CalculateFireRate(Grid* a_pGrid);
 	// Gives the player an extra life.
@@ -68,18 +68,16 @@ private:
 	unsigned int m_uiBoltCounter;
 
 	float m_fMovementSpeed;
-	// Time current time remaining before player can shoot again.
-	float m_fReloadTimer;
-	// The default max time before the player can shoot again.
-	float m_fDefaultFireRate;
-	// The current max time before the player can shoot again.
-	float m_fCurrentFireRate;
+	// The maximum time remaining before the player can shoot.
+	float m_fMaxReloadTime;
+	// The current time remaining before the player can shoot.
+	float m_fReloadTime;
 
 	bool m_bCanFire;
 	bool m_bIsAlive;
 
-	const char* mc_cpMoveAnimation;
-	const char* mc_cpFiredAnimation;
+	const char* mc_cpMoveSprite;
+	const char* mc_cpFiredSprite;
 	const char* mc_cpDeathAnimation;
 	std::string m_livesPrefix;
 

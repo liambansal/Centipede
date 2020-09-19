@@ -86,9 +86,6 @@ void Mushroom::Destroy(GameplayState* a_pGameplayState,
 
 	// Clear this mushrooms cell.
 	cell.ClearMushroom();
-	// Recalculate the bug blaster's fire rate to account for a possibly empty 
-	// cell.
-	bugBlaster.CalculateFireRate(a_pGrid);
 }
 
 void Mushroom::SetPosition(float x, float y)

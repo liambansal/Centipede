@@ -15,7 +15,6 @@ class PopUpText
 {
 public:
 	// Constructor
-	PopUpText();
 	PopUpText(std::string a_text, Vector2D a_enemyPosition);
 	// Destructor
 	~PopUpText();

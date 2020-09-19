@@ -101,7 +101,6 @@ void CentipedeHead::Update(GameplayState* a_pGameplayState,
 			Move(a_pGrid, a_pDeltaTime);
 			m_animator.Update(a_pDeltaTime);
 			m_pSprite = m_animator.GetCurrentFrame();
-			a_pGameplayState->GetBugBlaster()->CalculateFireRate(a_pGrid);
 			CheckBoundaryCollisions(a_pGrid);
 			CheckObjectCollision(a_pGrid);
 
@@ -500,23 +499,50 @@ void CentipedeHead::Split(Grid* a_pGrid, CentipedeBody* a_pSplitPoint)
 				(const float)m_bodyParts.back()->GetSprite()->height;
 			// One cell forward of the last body part in the list, along its 
 			// movement direction.
-			Cell& forwardCell = a_pGrid->GetCell(&forwardPosition);
 			// Clear cell references to this centipede's last body part.
 			a_pGrid->GetCell(m_bodyParts.back()->
 				GetPreviousPosition()).ClearCentipede();
 			a_pGrid->GetCell(m_bodyParts.back()->
 				GetCurrentPosition()).ClearCentipede();
+
+			if (*m_bodyParts.back()->GetMoveDirection() == m_moveDirection.Left() ||
+				*m_bodyParts.back()->GetMoveDirection() == m_moveDirection.Right())
+			{
+				Cell& forwardCell = a_pGrid->GetCell(&Vector2D(*m_bodyParts.back()->GetCurrentPosition() +
+					(*m_bodyParts.back()->GetMoveDirection()) *
+					m_bodyParts.back()->GetSprite()->height));
+
+				// Create a mushroom forward of the centipede part that was hit
+				// if the cell isn't already occupied by a mushroom.
+				if (!forwardCell.GetMushroom())
+				{
+					forwardCell.SpawnMushroom();
+				}
+			}
+			else if (*m_bodyParts.back()->GetMoveDirection() == m_moveDirection.Up() ||
+				*m_bodyParts.back()->GetMoveDirection() == m_moveDirection.Down())
+			{
+				// TODO: centipede bodies may need their own 'last horizontal direction' variable.
+				if (m_lastHorizontalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_LEFT)
+				{
+					// Spawn a mushroom left of this head's position.
+					a_pGrid->GetCell(&Vector2D(*m_bodyParts.back()->GetCurrentPosition() +
+						m_bodyParts.back()->GetMoveDirection()->Left() *
+						(const float)m_bodyParts.back()->GetSprite()->height)).SpawnMushroom();
+				}
+				else if (m_lastHorizontalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_RIGHT)
+				{
+					// Spawn a mushroom left of this head's position.
+					a_pGrid->GetCell(&Vector2D(*m_bodyParts.back()->GetCurrentPosition() +
+						m_bodyParts.back()->GetMoveDirection()->Right() *
+						(const float)m_bodyParts.back()->GetSprite()->height)).SpawnMushroom();
+				}
+			}
+			
 			// Destroys the body part that was hit by a bolt.
 			delete m_bodyParts.back();
 			m_bodyParts.back() = nullptr;
 			m_bodyParts.pop_back();
-
-			// Create a mushroom forward of the body part that was hit.
-			// Only if the cell isn't already occupied by a mushroom.
-			if (forwardCell.GetTag() != "Mushroom")
-			{
-				forwardCell.SpawnMushroom();
-			}
 		}
 
 		// Only spawn a new centipede if there are any bodies behind the 
@@ -600,10 +626,31 @@ void CentipedeHead::DestroyThis(GameplayState* a_pState,
 
 		if (m_pSprite)
 		{
-			// Spawn a mushroom forward of this head's position.
-			a_pGrid->GetCell(&Vector2D(m_position +
-				m_moveDirection *
-				(const float)m_pSprite->height)).SpawnMushroom();
+			if (m_moveDirection == m_moveDirection.Left() ||
+				m_moveDirection == m_moveDirection.Right())
+			{
+				// Spawn a mushroom forward of this head's position.
+				a_pGrid->GetCell(&Vector2D(m_position +
+					m_moveDirection *
+					(const float)m_pSprite->height)).SpawnMushroom();
+			}
+			else if (m_moveDirection == m_moveDirection.Up() ||	m_moveDirection == m_moveDirection.Down())
+			{
+				if (m_lastHorizontalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_LEFT)
+				{
+					// Spawn a mushroom left of this head's position.
+					a_pGrid->GetCell(&Vector2D(m_position +
+						m_moveDirection.Left() *
+						(const float)m_pSprite->height)).SpawnMushroom();
+				}
+				else if (m_lastHorizontalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_RIGHT)
+				{
+					// Spawn a mushroom left of this head's position.
+					a_pGrid->GetCell(&Vector2D(m_position +
+						m_moveDirection.Right() *
+						(const float)m_pSprite->height)).SpawnMushroom();
+				}
+			}
 		}
 
 		// Remove this head from its manager's centipede list before 

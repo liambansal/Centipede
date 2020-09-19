@@ -21,25 +21,25 @@ BugBlaster::BugBlaster(Grid* a_pGrid) : mc_uiMoveSprites(1),
 	mc_uiMaxLives(6),
 	m_uiLives(3),
 	m_uiBoltCounter(0),
-	m_fMovementSpeed(100.0f),
-	m_fReloadTimer(0.0f),
-	m_fDefaultFireRate(0.5f),
-	m_fCurrentFireRate(m_fDefaultFireRate),
+	m_fMovementSpeed(110.0f),
+	m_fMaxReloadTime(0.45f),
+	m_fReloadTime(0.0f),
 	m_bCanFire(true),
 	m_bIsAlive(true),
-	mc_cpMoveAnimation("Move"),
-	mc_cpFiredAnimation("Fired"),
+	mc_cpMoveSprite("Move"),
+	mc_cpFiredSprite("Fired"),
 	mc_cpDeathAnimation("Death"),
 	m_livesPrefix("Lives: "),
 	m_spawnPosition(128.0f, 216.0f),
 	m_position(m_spawnPosition),
 	m_pSprite(new Sprite("Resources/Sprites/Bug Blaster/Bug Blaster (1).png"))
 {
-	m_animator.AddFrame(mc_cpMoveAnimation,
+	m_animator.AddFrame(mc_cpMoveSprite,
 		new olc::Sprite("Resources/Sprites/Bug Blaster/Bug Blaster (1).png"));
-	m_animator.AddFrame(mc_cpFiredAnimation,
+	m_animator.AddFrame(mc_cpFiredSprite,
 		new olc::Sprite("Resources/Sprites/Bug Blaster/Bug Blaster (2).png"));
 
+	// Create an animation from each bug blaster death sprite.
 	for (unsigned int i = 1; i <= mc_uiDeathSprites; ++i)
 	{
 		m_animator.AddFrame(mc_cpDeathAnimation,
@@ -48,7 +48,7 @@ BugBlaster::BugBlaster(Grid* a_pGrid) : mc_uiMoveSprites(1),
 				").png"));
 	}
 
-	m_animator.SetAnimation(mc_cpMoveAnimation);
+	m_animator.SetAnimation(mc_cpMoveSprite);
 	const float frameLength = 0.1f;
 	m_animator.SetFrameLength(frameLength);
 }
@@ -66,9 +66,9 @@ void BugBlaster::Update(GameplayState* a_pState,
 		if (m_bIsAlive)
 		{
 			HandleInput(a_pState, a_pDeltaTime);
-			CheckForCollisions(a_pGrid);
-			ClampPosition(a_pGrid);
 			CalculateFireRate(a_pGrid);
+			ClampPosition(a_pGrid);
+			CheckForCollisions(a_pGrid);
 			
 			// Update our bolts.
 			for (int i = 0; i < sizeof(m_bolts) / sizeof(Bolt); ++i)
@@ -81,16 +81,15 @@ void BugBlaster::Update(GameplayState* a_pState,
 
 			// Checks if we should enable firing or continue reloading based on a 
 			// reload timer being less than zero i.e. complete.
-			if (m_fReloadTimer <= 0.0f)
+			if (m_fReloadTime <= 0.0f)
 			{
-				m_animator.SetAnimation(mc_cpMoveAnimation);
+				m_animator.SetAnimation(mc_cpMoveSprite);
 				m_bCanFire = true;
 			}
 			else
 			{
-				m_animator.SetAnimation(mc_cpFiredAnimation);
-				m_fReloadTimer -= (m_fReloadTimer / m_fReloadTimer) *
-					(*a_pDeltaTime);
+				m_animator.SetAnimation(mc_cpFiredSprite);
+				m_fReloadTime -= (*a_pDeltaTime);
 			}
 		}
 		else
@@ -131,9 +130,13 @@ void BugBlaster::HandleInput(GameplayState* a_pState, float* a_pDeltaTime)
 		}
 
 		// Check input for firing bolts.
-		if ((a_pState->GetManager()->GetKey(Key::ENTER).bHeld) && (m_bCanFire))
+		if (m_bCanFire &&
+			(a_pState->GetManager()->GetKey(Key::ENTER).bHeld ||
+			a_pState->GetManager()->GetKey(Key::ENTER).bPressed))
 		{
 			Fire(a_pState, a_pDeltaTime);
+			m_bCanFire = false;
+			m_fReloadTime = m_fMaxReloadTime;
 		}
 	}
 }
@@ -237,9 +240,6 @@ void BugBlaster::Fire(GameplayState* a_pState, float* a_pDeltaTime)
 		// Gets an existing bolt in the scene.
 		Bolt& bolt = GetBolt();
 		bolt.Load(this);
-		m_bCanFire = false;
-		// Reset the reload timer after firing.
-		m_fReloadTimer = m_fCurrentFireRate;
 	}
 }
 
@@ -322,14 +322,14 @@ void BugBlaster::CheckForCollisions(Grid* a_pGrid)
 	}
 }
 
-// Calculates the fire rate based on the distance of the closest object 
+// Calculates a reload time based on the distance of the closest object 
 // along the bug blaster's y axis.
 void BugBlaster::CalculateFireRate(Grid* a_pGrid)
 {
 	if (a_pGrid)
 	{
-		// Loops through the vertical line of the cells between the player and the 
-		// top of the screen.
+		// Loops through the vertical line of the cells between the bug blaster
+		// and the top of the screen.
 		for (int y = (int)a_pGrid->GetCell(&m_position).GetPosition()->GetY() /
 			a_pGrid->GetCellHeight();
 			y > 1;
@@ -337,28 +337,38 @@ void BugBlaster::CalculateFireRate(Grid* a_pGrid)
 		{
 			const Cell& examinedCell =
 				a_pGrid->GetCell((int)m_position.GetX() / a_pGrid->GetCellHeight(), y);
-			const char* emptyCellTag = "Empty Cell";
 
 			// Stops when its finds an occupied cell.
 			if (a_pGrid->GetCell(&m_position).GetPosition() &&
 				examinedCell.GetTag() != "Empty Cell")
 			{
-				// Calculates a fire rate based on the distance between the bug 
+				if (examinedCell.GetTag() == "Centipede")
+				{
+					float centipedeReloadTime = 0.16f;
+					m_fMaxReloadTime = centipedeReloadTime;
+					return;
+				}
+
+				// Calculates a reload time based on the distance between the bug 
 				// blaster and the occupied cell.
-				// A shorter distance produces a faster fire rate.
-				m_fCurrentFireRate =
+				// A shorter distance leads to a shorter reload time.
+				m_fMaxReloadTime =
 					((a_pGrid->GetCell(&m_position).GetPosition()->GetY() -
 						examinedCell.GetPosition()->GetY()) /
 						a_pGrid->GetCellHeight() /
 						a_pGrid->GetHeight());
-				m_fCurrentFireRate *= m_fCurrentFireRate;
+				m_fMaxReloadTime /= 2;
 				return;
 			}
-			else // Use the default fire rate.
-			{
-				m_fCurrentFireRate = m_fDefaultFireRate;
-			}
 		}
+
+		// Sets the maximum possible reload time if no occupied cells were 
+		// found.
+		m_fMaxReloadTime =
+			a_pGrid->GetCell(&m_position).GetPosition()->GetY() /
+			a_pGrid->GetCellHeight() /
+			a_pGrid->GetHeight();
+		m_fMaxReloadTime /= 2;
 	}
 }
 

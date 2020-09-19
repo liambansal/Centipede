@@ -8,12 +8,6 @@
 #include "GameStateManager.h"
 
 // Constructor
-PopUpText::PopUpText() : m_uiDriftSpeed(4),
-m_fDisplayLength(1.5f),
-m_bDestroy(false),
-m_position()
-{}
-
 PopUpText::PopUpText(std::string a_text, Vector2D a_enemyPosition) : m_uiDriftSpeed(4),
 m_fDisplayLength(1.5f),
 m_bDestroy(false)

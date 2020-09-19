@@ -20,7 +20,7 @@ Bolt::Bolt()
 	m_spawn = Vector2D(0.0f, 0.0f);
 	m_position = m_spawn;
 	m_bCanFire = false;
-	m_fVelocity = 300.0f;
+	m_fVelocity = 480.0f;
 }
 
 Bolt::~Bolt()
@@ -61,24 +61,24 @@ void Bolt::Draw(GameplayState* a_pState) const
 }
 
 // Sets the bolt as ready to fire.
-void Bolt::Load(BugBlaster* ship)
+void Bolt::Load(BugBlaster* a_pBugBlaster)
 {
-	if (ship && !m_bCanFire)
+	if (a_pBugBlaster && !m_bCanFire)
 	{
-		m_position = Vector2D(ship->GetPosition().GetX(), 
-			ship->GetPosition().GetY() - (m_pSprite->height / 2));
+		m_position = Vector2D(a_pBugBlaster->GetPosition().GetX(), 
+			a_pBugBlaster->GetPosition().GetY() - (m_pSprite->height / 2));
 		m_bCanFire = true;
 	}
 }
 
 // Checks for collisions with objects occupying the cell which the bolt is 
 // traveling through.
-void Bolt::CheckCollisions(Grid* grid)
+void Bolt::CheckCollisions(Grid* a_pGrid)
 {
-	if (grid)
+	if (a_pGrid)
 	{
 		// Gets the cell at the bolt's position.
-		Cell& cell = grid->GetCell(&m_position);
+		Cell& cell = a_pGrid->GetCell(&m_position);
 
 		// Check if cell is occupied by...
 		if (cell.GetFlea()) // ...a flea.
@@ -146,9 +146,9 @@ void Bolt::ClampPosition(Grid* a_pGrid,
 	}
 }
 
-void Bolt::SetSprite(olc::Sprite* a_sprite)
+void Bolt::SetSprite(olc::Sprite* a_pSprite)
 {
-	m_pSprite = a_sprite;
+	m_pSprite = a_pSprite;
 }
 
 void Bolt::SetPosition(float a_x, float a_y)
