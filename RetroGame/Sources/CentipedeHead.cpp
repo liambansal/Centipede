@@ -110,7 +110,7 @@ void CentipedeHead::Update(GameplayState* a_pGameplayState,
 				// we can keep a reference to the previously examined part.
 				auto m_pPreviousBody = m_bodyParts.begin();
 
-				// Calls update on all the centipede bodyparts using our primary 
+				// Calls update on all the centipede body parts using our primary 
 				// list iterator.
 				for (auto listIterator = m_bodyParts.begin();
 					listIterator != m_bodyParts.end();
@@ -293,10 +293,10 @@ void CentipedeHead::CheckObjectCollision(Grid* a_pGrid)
 				}
 			case MOVE_DIRECTIONS::MOVE_DIRECTIONS_LEFT:
 				{
-					forwardCell =
-						&a_pGrid->GetCell(&Vector2D(m_position.GetX() - 
+					Vector2D forwardPosition(m_position.GetX() -
 						(const float)m_pSprite->height,
-						m_position.GetY()));
+						m_position.GetY());
+					forwardCell = &a_pGrid->GetCell(&forwardPosition);
 
 					// Check the cell is occupied before attempting to 
 					// register a collision.
@@ -340,10 +340,10 @@ void CentipedeHead::CheckObjectCollision(Grid* a_pGrid)
 				}
 			case MOVE_DIRECTIONS::MOVE_DIRECTIONS_RIGHT:
 				{
-					forwardCell =
-						&a_pGrid->GetCell(&Vector2D(m_position.GetX() + 
+					Vector2D forwardPosition(m_position.GetX() +
 						(const float)m_pSprite->height,
-						m_position.GetY()));
+						m_position.GetY());
+					forwardCell = &a_pGrid->GetCell(&forwardPosition);
 
 					// Check the cell is occupied before attempting to 
 					// register a collision.
@@ -425,7 +425,7 @@ void CentipedeHead::Draw(GameplayState* a_pScene)
 
 	if (m_bHasBody)
 	{
-		// Calls Draw on all centipede bodyparts.
+		// Calls Draw on all centipede body parts.
 		for (auto listIterator = m_bodyParts.begin();
 			listIterator != m_bodyParts.end();
 			++listIterator)
@@ -438,8 +438,8 @@ void CentipedeHead::Draw(GameplayState* a_pScene)
 	}
 }
 
-// Splits the centipede somehwere along it's body creating a new,
-// independant, centipede.
+// Splits the centipede somewhere along it's body creating a new,
+// independent, centipede.
 void CentipedeHead::Split(Grid* a_pGrid, CentipedeBody* a_pSplitPoint)
 {
 	if (m_pManager && a_pGrid)
@@ -448,7 +448,7 @@ void CentipedeHead::Split(Grid* a_pGrid, CentipedeBody* a_pSplitPoint)
 
 		// Starts iterating from the tail of the centipede so we can remove 
 		// the bodies that come after the one that was hit and leave the
-		// preceeding ones alone.
+		// proceeding ones alone.
 		for (auto listIterator = m_bodyParts.rbegin();
 			listIterator != m_bodyParts.rend();
 			listIterator++)
@@ -508,9 +508,10 @@ void CentipedeHead::Split(Grid* a_pGrid, CentipedeBody* a_pSplitPoint)
 			if (*m_bodyParts.back()->GetMoveDirection() == m_moveDirection.Left() ||
 				*m_bodyParts.back()->GetMoveDirection() == m_moveDirection.Right())
 			{
-				Cell& forwardCell = a_pGrid->GetCell(&Vector2D(*m_bodyParts.back()->GetCurrentPosition() +
+				Vector2D forwardPosition(*m_bodyParts.back()->GetCurrentPosition() +
 					(*m_bodyParts.back()->GetMoveDirection()) *
-					m_bodyParts.back()->GetSprite()->height));
+					m_bodyParts.back()->GetSprite()->height);
+				Cell& forwardCell = a_pGrid->GetCell(&forwardPosition);
 
 				// Create a mushroom forward of the centipede part that was hit
 				// if the cell isn't already occupied by a mushroom.
@@ -525,17 +526,19 @@ void CentipedeHead::Split(Grid* a_pGrid, CentipedeBody* a_pSplitPoint)
 				// TODO: centipede bodies may need their own 'last horizontal direction' variable.
 				if (m_lastHorizontalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_LEFT)
 				{
-					// Spawn a mushroom left of this head's position.
-					a_pGrid->GetCell(&Vector2D(*m_bodyParts.back()->GetCurrentPosition() +
+					Vector2D left(*m_bodyParts.back()->GetCurrentPosition() +
 						m_bodyParts.back()->GetMoveDirection()->Left() *
-						(const float)m_bodyParts.back()->GetSprite()->height)).SpawnMushroom();
+						(const float)m_bodyParts.back()->GetSprite()->height);
+					// Spawn a mushroom left of this head's position.
+					a_pGrid->GetCell(&left).SpawnMushroom();
 				}
 				else if (m_lastHorizontalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_RIGHT)
 				{
-					// Spawn a mushroom left of this head's position.
-					a_pGrid->GetCell(&Vector2D(*m_bodyParts.back()->GetCurrentPosition() +
+					Vector2D right(*m_bodyParts.back()->GetCurrentPosition() +
 						m_bodyParts.back()->GetMoveDirection()->Right() *
-						(const float)m_bodyParts.back()->GetSprite()->height)).SpawnMushroom();
+						(const float)m_bodyParts.back()->GetSprite()->height);
+					// Spawn a mushroom left of this head's position.
+					a_pGrid->GetCell(&right).SpawnMushroom();
 				}
 			}
 			
@@ -564,19 +567,19 @@ void CentipedeHead::CreateBody(Grid* a_pGrid, unsigned int a_length)
 
 	if (m_pSprite && m_uiBodyLength > 0)
 	{
-		// Spawns the centipede's bodyparts.
+		// Spawns the centipede's body parts.
 		for (unsigned int bodiesSpawned = 0; bodiesSpawned < m_uiBodyLength;)
 		{
 			CentipedeBody* body = new CentipedeBody();
 
 			if (body && m_pSprite)
 			{
-				// Spawns the bodies in a column, one behind the other. Some 
-				// bodies may spawn off screen and have negative values.
-				// Pre-fix increment operator is evaluated before its operand is 
+				// Prefix increment operator is evaluated before its operand is 
 				// used in the expression evaluation.
-				body->SetPosition(&Vector2D(m_position.GetX(),
-					m_position.GetY() - ++bodiesSpawned * m_pSprite->height));
+				Vector2D bodyEnd(m_position.GetX(), m_position.GetY() - ++bodiesSpawned * m_pSprite->height);
+				// Spawns the bodies in a column, one behind the other. Some 
+				// bodies may spawn off screen and have negative position values.
+				body->SetPosition(&bodyEnd);
 				body->SetHead(this);
 				// Add the newly created body to the centipede's parts list to 
 				// keep track of it.
@@ -629,26 +632,23 @@ void CentipedeHead::DestroyThis(GameplayState* a_pState,
 			if (m_moveDirection == m_moveDirection.Left() ||
 				m_moveDirection == m_moveDirection.Right())
 			{
+				Vector2D forward(m_position + m_moveDirection * (const float)m_pSprite->height);
 				// Spawn a mushroom forward of this head's position.
-				a_pGrid->GetCell(&Vector2D(m_position +
-					m_moveDirection *
-					(const float)m_pSprite->height)).SpawnMushroom();
+				a_pGrid->GetCell(&forward).SpawnMushroom();
 			}
 			else if (m_moveDirection == m_moveDirection.Up() ||	m_moveDirection == m_moveDirection.Down())
 			{
 				if (m_lastHorizontalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_LEFT)
 				{
+					Vector2D left(m_position + m_moveDirection.Left() * (const float)m_pSprite->height);
 					// Spawn a mushroom left of this head's position.
-					a_pGrid->GetCell(&Vector2D(m_position +
-						m_moveDirection.Left() *
-						(const float)m_pSprite->height)).SpawnMushroom();
+					a_pGrid->GetCell(&left).SpawnMushroom();
 				}
 				else if (m_lastHorizontalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_RIGHT)
 				{
+					Vector2D right(m_position + m_moveDirection.Right() * (const float)m_pSprite->height);
 					// Spawn a mushroom left of this head's position.
-					a_pGrid->GetCell(&Vector2D(m_position +
-						m_moveDirection.Right() *
-						(const float)m_pSprite->height)).SpawnMushroom();
+					a_pGrid->GetCell(&right).SpawnMushroom();
 				}
 			}
 		}
@@ -774,7 +774,7 @@ void CentipedeHead::SetMoveDirection(Grid* a_pGrid)
 
 			if (m_pTargetCell)
 			{
-				// Allign the centipede's y position with it's target cell's row.
+				// Align the centipede's y position with it's target cell's row.
 				m_position.SetY(m_pTargetCell->GetPosition()->GetY());
 			}
 
@@ -817,7 +817,7 @@ void CentipedeHead::SetMoveDirection(Grid* a_pGrid)
 
 			if (m_pTargetCell)
 			{
-				// Allign the centipede's y position with it's target cell's row.
+				// Align the centipede's y position with it's target cell's row.
 				m_position.SetY(m_pTargetCell->GetPosition()->GetY());
 			}
 

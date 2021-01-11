@@ -78,10 +78,9 @@ void SpiderManager::SpawnSpider(Grid* a_pGrid)
 			// Sets the spiders position to be somewhere along the grid's right 
 			// boundary, between the lower boundary and the start of the no movement 
 			// zone.
-			m_pSpider->SetPosition(&Vector2D((float)a_pGrid->
-				GetRightBoundary(m_pSpider->GetSprite()->width / 2),
-				(float)a_pGrid->GetLowerBoundary(m_pSpider->GetSprite()->height / 2) -
-				randGenerator.GetRandomFloat((float)a_pGrid->GetBlasterZoneHeight())));
+			Vector2D spawn((float)a_pGrid->GetRightBoundary(m_pSpider->GetSprite()->width / 2),
+				(float)a_pGrid->GetLowerBoundary(m_pSpider->GetSprite()->height / 2) - randGenerator.GetRandomFloat((float)a_pGrid->GetBlasterZoneHeight()));
+			m_pSpider->SetPosition(&spawn);
 		}
 	}
 }

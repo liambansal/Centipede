@@ -23,7 +23,7 @@ MenuState::MenuState() : GameState(),
 MenuState::~MenuState()
 {}
 
-// Sets up the menu wit hbuttons and a manager.
+// Sets up the menu with buttons and a manager.
 void MenuState::Initialize()
 {
 	if (m_pManager)
@@ -33,12 +33,17 @@ void MenuState::Initialize()
 			0.0f);
 		m_score.SetPosition(&drawPosition);
 		m_options[0].SetText("Play");
-		m_options[0].SetPosition(&Vector2D((float)m_pManager->GetDrawTargetWidth() / 2,
-			(float)m_pManager->GetDrawTargetHeight() / 2));
 		m_options[1].SetText("Quit");
+
+		Vector2D screenCenter((float)m_pManager->GetDrawTargetWidth() / 2,
+			(float)m_pManager->GetDrawTargetHeight() / 2);
+		Vector2D buttonPosition((float)screenCenter.GetX(), (float)screenCenter.GetY());
 		unsigned int buttonHeight = 10;
-		m_options[1].SetPosition(&Vector2D((float)m_pManager->GetDrawTargetWidth() / 2,
-			(float)m_pManager->GetDrawTargetHeight() / 2 + buttonHeight));
+
+		for (int i = 0; i < sizeof(m_options) / sizeof(Button); ++i) {
+			buttonPosition -= buttonPosition.Down() * buttonHeight;
+			m_options[i].SetPosition(&buttonPosition);
+		}
 	}
 }
 

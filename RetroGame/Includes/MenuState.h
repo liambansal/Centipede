@@ -33,7 +33,7 @@ public:
 	Score* GetScore();
 
 private:
-	//Variables
+	// Variables.
 	unsigned int m_uiSelectedOption;
 	Button m_options[2];
 	Score m_score;
@@ -42,8 +42,7 @@ private:
 	{
 		BUTTONS_PLAY = 0,
 		BUTTONS_QUIT = 1,
-
-		BUTTONS_TWO // Total states in the enum.
+		BUTTONS_LENGTH // Total states in the enum.
 	};
 };
 
