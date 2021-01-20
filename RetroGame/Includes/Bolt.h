@@ -32,7 +32,7 @@ public:
 	// Draws the bolt onto the screen.
 	void Draw(GameplayState* pScene) const;
 	// Sets the bolt as ready to fire.
-	void Load(BugBlaster* ship);
+	void Fire(BugBlaster* ship);
 	// Checks for collisions with objects occupying the cell which the bolt is 
 	// traveling through.
 	void CheckCollisions(Grid* grid);

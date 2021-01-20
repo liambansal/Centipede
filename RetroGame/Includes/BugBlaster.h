@@ -49,8 +49,7 @@ public:
 	void CalculateFireRate(Grid* a_pGrid);
 	// Gives the player an extra life.
 	void AddLife();
-	// Checks if the game should end or if the bug blaster should be respawned.
-	void PlayerDied(GameplayState* a_pState, Grid* a_pGrid);
+	// Respawns the bug blaster and resets the scene.
 	void Respawn(GameplayState* a_pState, Grid* a_pGrid);
 	void SetSprite(olc::Sprite* a_sprite);
 	void SetPosition(Vector2D a_position);

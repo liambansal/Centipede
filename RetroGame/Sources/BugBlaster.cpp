@@ -43,9 +43,7 @@ BugBlaster::BugBlaster(Grid* a_pGrid) : mc_uiMoveSprites(1),
 	for (unsigned int i = 1; i <= mc_uiDeathSprites; ++i)
 	{
 		m_animator.AddFrame(mc_cpDeathAnimation,
-			new olc::Sprite("Resources/Sprites/Bug Blaster/Bug Blaster Death (" +
-				std::to_string(i) +
-				").png"));
+			new olc::Sprite("Resources/Sprites/Bug Blaster/Bug Blaster Death (" + std::to_string(i) + ").png"));
 	}
 
 	m_animator.SetAnimation(mc_cpMoveSprite);
@@ -92,9 +90,15 @@ void BugBlaster::Update(GameplayState* a_pState,
 				m_fReloadTime -= (*a_pDeltaTime);
 			}
 		}
+		else if (!m_bIsAlive && m_uiLives == 0)
+		{
+			// Exit the gameplay scene.
+			a_pState->SetState(false);
+			return;
+		}
 		else
 		{
-			PlayerDied(a_pState, a_pGrid);
+			Respawn(a_pState, a_pGrid);
 		}
 
 		m_animator.Update(a_pDeltaTime);
@@ -239,7 +243,7 @@ void BugBlaster::Fire(GameplayState* a_pState, float* a_pDeltaTime)
 	{
 		// Gets an existing bolt in the scene.
 		Bolt& bolt = GetBolt();
-		bolt.Load(this);
+		bolt.Fire(this);
 	}
 }
 
@@ -292,8 +296,6 @@ void BugBlaster::CheckForCollisions(Grid* a_pGrid)
 
 			if (m_pAdjacentCells && m_pSprite) // Null check pointers.
 			{
-				const char* mushroomTag = "Mushroom";
-
 				// Loops through each adjacent cell.
 				for (unsigned int i = 0;
 					i < sizeof(m_pAdjacentCells) / sizeof(*m_pAdjacentCells);
@@ -383,8 +385,8 @@ void BugBlaster::AddLife()
 	}
 }
 
-// Checks if the game should end or if the bug blaster should be respawned.
-void BugBlaster::PlayerDied(GameplayState* a_pState, Grid* a_pGrid)
+// Respawns the bug blaster and resets the scene.
+void BugBlaster::Respawn(GameplayState* a_pState, Grid* a_pGrid)
 {
 	if (a_pState && a_pGrid)
 	{
@@ -397,16 +399,11 @@ void BugBlaster::PlayerDied(GameplayState* a_pState, Grid* a_pGrid)
 
 		if (m_animator.AnimationOver())
 		{
-			if (m_uiLives == 0)
-			{
-				a_pState->SetState(false);
-				return;
-			}
-
 			// Count any new mushrooms to increase the players score.
 			a_pGrid->CountMushrooms(a_pState);
 			// Respawn the player after they've died.
-			Respawn(a_pState, a_pGrid);
+			m_position = m_spawnPosition;
+			m_bIsAlive = true;
 			// Clear all enemies.
 			a_pState->GetCentipedeManager()->ClearCentipedes(a_pGrid);
 			a_pState->GetSpiderManager()->DestroySpider(a_pGrid);
@@ -415,12 +412,6 @@ void BugBlaster::PlayerDied(GameplayState* a_pState, Grid* a_pGrid)
 			a_pState->GetCentipedeManager()->SpawnCentipede(a_pGrid);
 		}
 	}
-}
-
-void BugBlaster::Respawn(GameplayState* a_pState, Grid* a_pGrid)
-{
-	m_position = m_spawnPosition;
-	m_bIsAlive = true;
 }
 
 void BugBlaster::SetSprite(olc::Sprite* a_sprite)

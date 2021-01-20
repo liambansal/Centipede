@@ -61,7 +61,7 @@ void Bolt::Draw(GameplayState* a_pState) const
 }
 
 // Sets the bolt as ready to fire.
-void Bolt::Load(BugBlaster* a_pBugBlaster)
+void Bolt::Fire(BugBlaster* a_pBugBlaster)
 {
 	if (a_pBugBlaster && !m_bCanFire)
 	{
@@ -80,26 +80,26 @@ void Bolt::CheckCollisions(Grid* a_pGrid)
 		// Gets the cell at the bolt's position.
 		Cell& cell = a_pGrid->GetCell(&m_position);
 
-		// Check if cell is occupied by...
-		if (cell.GetFlea()) // ...a flea.
+		// Check what's occupying the cell.
+		if (cell.GetFlea())
 		{
 			cell.GetFlea()->DecreaseHealth();
 			m_position = m_spawn;
 			m_bCanFire = false;
 		}
-		else if (cell.GetSpider()) // ...a spider.
+		else if (cell.GetSpider())
 		{
 			cell.GetSpider()->DecreaseHealth();
 			m_position = m_spawn;
 			m_bCanFire = false;
 		}
-		else if (cell.GetCentipede()) // ...a centipede.
+		else if (cell.GetCentipede())
 		{
 			cell.GetCentipede()->DecreaseHealth();
 			m_position = m_spawn;
 			m_bCanFire = false;
 		}
-		else if (cell.GetTag() == "Mushroom") // ...a mushroom.
+		else if (cell.GetTag() == "Mushroom")
 		{
 			cell.GetMushroom()->DecreaseHealth();
 			m_position = m_spawn;
