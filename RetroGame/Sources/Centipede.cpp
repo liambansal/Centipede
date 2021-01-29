@@ -48,9 +48,9 @@ void Centipede::Draw(GameplayState* a_pScene)
 	if (a_pScene && a_pScene->GetManager() && m_pSprite)
 	{
 		a_pScene->GetManager()->DrawSprite((int32_t)m_position.GetX() -
-			m_pSprite->width / 2,
+			m_pSprite->width * 0.5f,
 			(int32_t)m_position.GetY() -
-			m_pSprite->height / 2,
+			m_pSprite->height * 0.5f,
 			m_pSprite);
 	}
 }

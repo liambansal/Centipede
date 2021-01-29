@@ -14,8 +14,8 @@
 using namespace olc;
 
 MenuState::MenuState() : GameState(),
-	m_uiSelectedOption(0),
-	m_options()
+m_uiSelectedOption(0),
+m_options()
 {
 	m_bIsActive = true;
 }
@@ -35,13 +35,14 @@ void MenuState::Initialize()
 		m_options[0].SetText("Play");
 		m_options[1].SetText("Quit");
 
-		Vector2D screenCenter((float)m_pManager->GetDrawTargetWidth() / 2,
-			(float)m_pManager->GetDrawTargetHeight() / 2);
+		Vector2D screenCenter((float)m_pManager->GetDrawTargetWidth() * 0.5f,
+			(float)m_pManager->GetDrawTargetHeight() * 0.5f);
 		Vector2D buttonPosition((float)screenCenter.GetX(), (float)screenCenter.GetY());
 		unsigned int buttonHeight = 10;
 
-		for (int i = 0; i < sizeof(m_options) / sizeof(Button); ++i) {
-			buttonPosition -= buttonPosition.Down() * buttonHeight;
+		for (int i = 0; i < sizeof(m_options) / sizeof(Button); ++i)
+		{
+			buttonPosition -= buttonPosition.Down() * (float)buttonHeight;
 			m_options[i].SetPosition(&buttonPosition);
 		}
 	}

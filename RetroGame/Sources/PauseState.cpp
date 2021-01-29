@@ -9,8 +9,8 @@
 #include "Vector2D.h"
 
 PauseState::PauseState() : GameState(),
-	m_pauseText("Paused"),
-	m_bIsPaused(true)
+m_pauseText("Paused"),
+m_bIsPaused(true)
 {
 	m_bIsActive = true;
 }
@@ -44,8 +44,8 @@ void PauseState::Draw()
 {
 	if (m_bIsActive && m_pManager)
 	{
-		int32_t xPosition = m_pManager->GetDrawTargetWidth() / 2;
-		int32_t yPosition = m_pManager->GetDrawTargetHeight() / 2;
+		int32_t xPosition = m_pManager->GetDrawTargetWidth() * 0.5f;
+		int32_t yPosition = m_pManager->GetDrawTargetHeight() * 0.5f;
 		// Draws the pause text at the center of the screen.
 		m_pManager->DrawString(xPosition,
 			yPosition,

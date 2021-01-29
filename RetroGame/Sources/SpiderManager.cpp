@@ -10,6 +10,7 @@
 #include "Spider.h"
 #include "Vector2D.h"
 
+// Respawn time & max is 20
 SpiderManager::SpiderManager() : mc_fMaxRespawnTime(20.0f),
 	m_fRespawnTime(20.0f),
 	m_pSpider(nullptr)
@@ -78,9 +79,10 @@ void SpiderManager::SpawnSpider(Grid* a_pGrid)
 			// Sets the spiders position to be somewhere along the grid's right 
 			// boundary, between the lower boundary and the start of the no movement 
 			// zone.
-			Vector2D spawn((float)a_pGrid->GetRightBoundary(m_pSpider->GetSprite()->width / 2),
-				(float)a_pGrid->GetLowerBoundary(m_pSpider->GetSprite()->height / 2) - randGenerator.GetRandomFloat((float)a_pGrid->GetBlasterZoneHeight()));
-			m_pSpider->SetPosition(&spawn);
+			Vector2D spawn((float)a_pGrid->GetRightBoundary(m_pSpider->GetSprite()->width * 0.5f),
+				// Pad top and bottom of blaster zone with half the spiders height.
+				(float)a_pGrid->GetLowerBoundary(m_pSpider->GetSprite()->height * 0.5f) - randGenerator.GetRandomFloat((float)a_pGrid->GetBlasterZoneHeight() - m_pSpider->GetSprite()->height * 0.5f));
+			m_pSpider->SetPosition(a_pGrid->GetCell(&spawn).GetPosition());
 		}
 	}
 }

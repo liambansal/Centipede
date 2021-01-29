@@ -66,7 +66,7 @@ void Bolt::Fire(BugBlaster* a_pBugBlaster)
 	if (a_pBugBlaster && !m_bCanFire)
 	{
 		m_position = Vector2D(a_pBugBlaster->GetPosition().GetX(), 
-			a_pBugBlaster->GetPosition().GetY() - (m_pSprite->height / 2));
+			a_pBugBlaster->GetPosition().GetY() - (m_pSprite->height * 0.5f));
 		m_bCanFire = true;
 	}
 }
@@ -78,32 +78,36 @@ void Bolt::CheckCollisions(Grid* a_pGrid)
 	if (a_pGrid)
 	{
 		// Gets the cell at the bolt's position.
-		Cell& cell = a_pGrid->GetCell(&m_position);
+		Cell* cell = nullptr;
+		cell = &a_pGrid->GetCell(&m_position);
 
-		// Check what's occupying the cell.
-		if (cell.GetFlea())
+		if (cell != nullptr)
 		{
-			cell.GetFlea()->DecreaseHealth();
-			m_position = m_spawn;
-			m_bCanFire = false;
-		}
-		else if (cell.GetSpider())
-		{
-			cell.GetSpider()->DecreaseHealth();
-			m_position = m_spawn;
-			m_bCanFire = false;
-		}
-		else if (cell.GetCentipede())
-		{
-			cell.GetCentipede()->DecreaseHealth();
-			m_position = m_spawn;
-			m_bCanFire = false;
-		}
-		else if (cell.GetTag() == "Mushroom")
-		{
-			cell.GetMushroom()->DecreaseHealth();
-			m_position = m_spawn;
-			m_bCanFire = false;
+			// Check what's occupying the cell.
+			if (cell->GetFlea())
+			{
+				cell->GetFlea()->DecreaseHealth();
+				m_position = m_spawn;
+				m_bCanFire = false;
+			}
+			else if (cell->GetSpider())
+			{
+				cell->GetSpider()->DecreaseHealth();
+				m_position = m_spawn;
+				m_bCanFire = false;
+			}
+			else if (cell->GetCentipede())
+			{
+				cell->GetCentipede()->DecreaseHealth();
+				m_position = m_spawn;
+				m_bCanFire = false;
+			}
+			else if (cell->GetTag() == "Mushroom")
+			{
+				cell->GetMushroom()->DecreaseHealth();
+				m_position = m_spawn;
+				m_bCanFire = false;
+			}
 		}
 	}
 }
@@ -118,13 +122,13 @@ void Bolt::ClampPosition(Grid* a_pGrid,
 		// Screen origin starts at top left corner. Y axis increases downwards. X 
 		// axis increases to the right.
 		// Check if x position is greater than the grid's right boundary.
-		if (m_position.GetX() > a_pGrid->GetRightBoundary(m_pSprite->height / 2))
+		if (m_position.GetX() > a_pGrid->GetRightBoundary(m_pSprite->height * 0.5f))
 		{
 			m_position = m_spawn;
 			m_bCanFire = false;
 		}
 		// Check if x position is lower than the grid's left boundary.
-		else if (m_position.GetX() < a_pGrid->GetLeftBoundary(m_pSprite->height / 2))
+		else if (m_position.GetX() < a_pGrid->GetLeftBoundary(m_pSprite->height * 0.5f))
 		{
 			m_position = m_spawn;
 			m_bCanFire = false;
@@ -132,13 +136,13 @@ void Bolt::ClampPosition(Grid* a_pGrid,
 
 		// Check if y position is greater than the grid's top boundary plus the no 
 		// movement zone's height.
-		if (m_position.GetY() < a_pGrid->GetUpperBoundary(m_pSprite->height / 2))
+		if (m_position.GetY() < a_pGrid->GetUpperBoundary(m_pSprite->height * 0.5f))
 		{
 			m_position = m_spawn;
 			m_bCanFire = false;
 		}
 		// Check if y position is lower than the grid's bottom boundary.
-		else if (m_position.GetY() > a_pGrid->GetLowerBoundary(m_pSprite->height / 2))
+		else if (m_position.GetY() > a_pGrid->GetLowerBoundary(m_pSprite->height * 0.5f))
 		{
 			m_position = m_spawn;
 			m_bCanFire = false;

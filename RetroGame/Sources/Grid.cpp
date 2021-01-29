@@ -22,7 +22,7 @@ Grid::Grid() : mc_uiCellWidth(8),
 	mc_uiWidthInCells(32),
 	mc_uiHeightInCells(28),
 	mc_uiPixelWidth(mc_uiWidthInCells* mc_uiCellWidth),
-	mc_uiPixelHeight(mc_uiHeightInCells* mc_uiCellWidth),
+	mc_uiPixelHeight(mc_uiHeightInCells* mc_uiCellHeight),
 	mc_uiXOrigin(4),
 	mc_uiYOrigin(20),
 	mc_uiBlasterZoneHeight(10),
@@ -179,11 +179,19 @@ const unsigned int Grid::GetHeight() const
 	return mc_uiHeightInCells; 
 }
 
+/// <summary>
+/// Gets grid's width in pixels.
+/// </summary>
+/// <returns> Pixel width of grid. </returns>
 const unsigned int Grid::GetPixelWidth() const
 {
 	return mc_uiPixelWidth;
 }
 
+/// <summary>
+/// Gets grid's height in pixels.
+/// </summary>
+/// <returns> Pixel height of grid. </returns>
 const unsigned int Grid::GetPixelHeight() const
 {
 	return mc_uiPixelHeight;
@@ -201,8 +209,7 @@ const unsigned int Grid::GetYOrigin() const
 // The y position of the grid's top 'wall'.
 const unsigned int Grid::GetUpperBoundary(unsigned int a_margin) const
 {
-	unsigned int UIHeight = (Grid::GetYOrigin() / mc_uiCellHeight) * 
-		mc_uiCellHeight;
+	unsigned int UIHeight = (Grid::GetYOrigin() / mc_uiCellHeight) * mc_uiCellHeight;
 	unsigned int yPosition = UIHeight + a_margin;
 	return yPosition;
 }
@@ -210,10 +217,8 @@ const unsigned int Grid::GetUpperBoundary(unsigned int a_margin) const
 // The y position of the grid's bottom 'wall'.
 const unsigned int Grid::GetLowerBoundary(unsigned int a_margin) const
 {
-	unsigned int UIHeight = (Grid::GetYOrigin() / mc_uiCellHeight) *
-		mc_uiCellHeight;
-	unsigned int yPosition = Grid::GetHeight() *
-		mc_uiCellHeight + UIHeight - a_margin;
+	unsigned int UIHeight = (Grid::GetYOrigin() / mc_uiCellHeight) * mc_uiCellHeight;
+	unsigned int yPosition = UIHeight + mc_uiPixelHeight - a_margin;
 	return yPosition;
 }
 
@@ -291,8 +296,7 @@ Cell& Grid::GetCell(Vector2D* a_pPosition) const
 		return *m_cells[clamp.ClampInt((unsigned int)a_pPosition->GetX() / mc_uiCellWidth,
 			0,
 			mc_uiWidthInCells - cellsToDeduct)]
-			[clamp.ClampInt((unsigned int)a_pPosition->GetY() / mc_uiCellHeight -
-				(mc_uiYOrigin / mc_uiCellHeight),
+			[clamp.ClampInt((unsigned int)a_pPosition->GetY() / mc_uiCellHeight - (mc_uiYOrigin / mc_uiCellHeight),
 				0,
 				mc_uiHeightInCells - cellsToDeduct)];
 	}

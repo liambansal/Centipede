@@ -28,7 +28,7 @@ public:
 private:
 	// Variables.
 	// Length of time (in seconds) between the two latest Update calls.
-	float* m_pDeltaTime;
+	float m_fDeltaTime;
 	// Total amount of time the timer has been running for.
 	double m_runLength;
 };

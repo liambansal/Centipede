@@ -85,7 +85,7 @@ void CentipedeHead::operator=(const CentipedeHead* a_rCentipede)
 
 // Updates the centipede head & bodies' positions, collisions, animations and
 // deaths.
-void CentipedeHead::Update(GameplayState* a_pGameplayState, 
+void CentipedeHead::Update(GameplayState* a_pGameplayState,
 	Grid* a_pGrid,
 	float* a_pDeltaTime)
 {
@@ -165,9 +165,7 @@ void CentipedeHead::Move(Grid* a_pGrid, float* a_pDeltaTime)
 		// If we have a target to move towards then do it.
 		if (m_pTargetCell)
 		{
-			m_position += m_moveDirection.normalised() *
-				(const float)m_uiSpeed *
-				(*a_pDeltaTime);
+			m_position += m_moveDirection.normalised() * (const float)m_uiSpeed * (*a_pDeltaTime);
 		}
 		else
 		{
@@ -175,8 +173,7 @@ void CentipedeHead::Move(Grid* a_pGrid, float* a_pDeltaTime)
 		}
 
 		// Check if this centipede part has moved into a new cell.
-		if (a_pGrid->GetCell(&m_position).GetPosition() !=
-			m_pPreviousCellsPosition)
+		if (a_pGrid->GetCell(&m_position).GetPosition() != m_pPreviousCellsPosition)
 		{
 			UpdateOccupiedCell(a_pGrid);
 
@@ -187,8 +184,7 @@ void CentipedeHead::Move(Grid* a_pGrid, float* a_pDeltaTime)
 			{
 				if (*listIterator)
 				{
-					(*listIterator)->GetTargetCells()->push_back(&a_pGrid->
-						GetCell(&m_position));
+					(*listIterator)->GetTargetCells()->push_back(&a_pGrid->GetCell(&m_position));
 				}
 			}
 		}
@@ -206,16 +202,14 @@ void CentipedeHead::CheckBoundaryCollisions(Grid* a_pGrid)
 
 		// Checks if the centipede's x position is less or greater than the left 
 		// and right grid boundaries.
-		if (m_position.GetX() < ((float)m_pSprite->width / 2))
+		if (m_position.GetX() < ((float)m_pSprite->width * 0.5f))
 		{
-			m_position.SetX((float)m_pSprite->width / 2);
+			m_position.SetX((float)m_pSprite->width * 0.5f);
 			collided = true;
 		}
-		else if (m_position.GetX() > ((float)a_pGrid->
-			GetRightBoundary((unsigned int)((float)m_pSprite->width / 2))))
+		else if (m_position.GetX() > ((float)a_pGrid->GetRightBoundary((unsigned int)((float)m_pSprite->width * 0.5f))))
 		{
-			m_position.SetX((float)a_pGrid->
-				GetRightBoundary((unsigned int)((float)m_pSprite->width / 2)));
+			m_position.SetX((float)a_pGrid->GetRightBoundary((unsigned int)((float)m_pSprite->width * 0.5f)));
 			collided = true;
 		}
 
@@ -226,12 +220,9 @@ void CentipedeHead::CheckBoundaryCollisions(Grid* a_pGrid)
 			// will surpass the top/bottom grid boundaries.
 			// Checks if we've crossed the top or bottom boundary of the grid.
 			if ((m_verticalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_UP &&
-				(m_position.GetY() <= (float)a_pGrid->
-					GetUpperBoundary((unsigned int)((float)m_pSprite->height / 2)) +
-					a_pGrid->GetNoMovementZone()->GetY())) ||
+				(m_position.GetY() <= (float)a_pGrid->GetUpperBoundary((unsigned int)((float)m_pSprite->height * 0.5f)) + a_pGrid->GetNoMovementZone()->GetY())) ||
 				((m_verticalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_DOWN &&
-					m_position.GetY() >= (float)a_pGrid->
-					GetLowerBoundary((unsigned int)((float)m_pSprite->height / 2)))))
+					m_position.GetY() >= (float)a_pGrid->GetLowerBoundary((unsigned int)((float)m_pSprite->height * 0.5f)))))
 			{
 				VerticalWallCollision(a_pGrid);
 				return;
@@ -272,7 +263,7 @@ void CentipedeHead::CheckObjectCollision(Grid* a_pGrid)
 		// If we don't want to ignore collisions...
 		if (!m_bIgnoreCollisions)
 		{
-			Cell* forwardCell;
+			Cell* forwardCell = nullptr;
 
 			// ...check for collisions along the current movement direction.
 			switch (m_currentDirection)
@@ -283,8 +274,7 @@ void CentipedeHead::CheckObjectCollision(Grid* a_pGrid)
 					// equal to the target cell's y position because we only want 
 					// to move up one row.
 					if (m_pTargetCell &&
-						m_position.GetY() <=
-						m_pTargetCell->GetPosition()->GetY())
+						m_position.GetY() <= m_pTargetCell->GetPosition()->GetY())
 					{
 						SetMoveDirection(a_pGrid);
 					}
@@ -293,14 +283,13 @@ void CentipedeHead::CheckObjectCollision(Grid* a_pGrid)
 				}
 			case MOVE_DIRECTIONS::MOVE_DIRECTIONS_LEFT:
 				{
-					Vector2D forwardPosition(m_position.GetX() -
-						(const float)m_pSprite->height,
+					Vector2D forwardPosition(m_position.GetX() - (const float)m_pSprite->height,
 						m_position.GetY());
 					forwardCell = &a_pGrid->GetCell(&forwardPosition);
 
 					// Check the cell is occupied before attempting to 
 					// register a collision.
-					if (forwardCell &&
+					if (forwardCell != nullptr &&
 						forwardCell->GetTag() != "Empty Cell")
 					{
 						if (forwardCell->GetTag() == "Centipede" &&
@@ -330,8 +319,7 @@ void CentipedeHead::CheckObjectCollision(Grid* a_pGrid)
 					// or equal to the target cell's y position because we only 
 					// want to move down one row.
 					if (m_pTargetCell &&
-						m_position.GetY() >=
-						m_pTargetCell->GetPosition()->GetY())
+						m_position.GetY() >= m_pTargetCell->GetPosition()->GetY())
 					{
 						SetMoveDirection(a_pGrid);
 					}
@@ -347,7 +335,7 @@ void CentipedeHead::CheckObjectCollision(Grid* a_pGrid)
 
 					// Check the cell is occupied before attempting to 
 					// register a collision.
-					if (forwardCell &&
+					if (forwardCell != nullptr &&
 						forwardCell->GetTag() != "Empty Cell")
 					{
 						if (forwardCell->GetTag() == "Centipede" &&
@@ -396,11 +384,11 @@ void CentipedeHead::CheckDistance(Grid* a_pGrid)
 			// or bottom rows of the grid.
 			if ((m_verticalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_UP &&
 				(m_position.GetY() <= (const float)a_pGrid->
-					GetUpperBoundary(m_pSprite->height / 2) +
+					GetUpperBoundary(m_pSprite->height * 0.5f) +
 					a_pGrid->GetNoMovementZone()->GetY())) ||
 				((m_verticalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_DOWN &&
 					m_position.GetY() >= (const float)a_pGrid->
-					GetLowerBoundary(m_pSprite->height / 2))))
+					GetLowerBoundary(m_pSprite->height * 0.5f))))
 			{
 				VerticalWallCollision(a_pGrid);
 				return;
@@ -417,9 +405,9 @@ void CentipedeHead::Draw(GameplayState* a_pScene)
 	if (m_pSprite && a_pScene)
 	{
 		a_pScene->GetManager()->DrawSprite((int32_t)m_position.GetX() -
-			m_pSprite->width / 2,
+			m_pSprite->width * 0.5f,
 			(int32_t)m_position.GetY() -
-			m_pSprite->height / 2,
+			m_pSprite->height * 0.5f,
 			m_pSprite);
 	}
 
@@ -490,7 +478,7 @@ void CentipedeHead::Split(Grid* a_pGrid, CentipedeBody* a_pSplitPoint)
 			m_bodyParts.pop_back();
 			listIterator++;
 		}
-		
+
 		if (m_bodyParts.back() && m_bodyParts.back()->GetSprite())
 		{
 			Vector2D forwardPosition =
@@ -510,14 +498,15 @@ void CentipedeHead::Split(Grid* a_pGrid, CentipedeBody* a_pSplitPoint)
 			{
 				Vector2D forwardPosition(*m_bodyParts.back()->GetCurrentPosition() +
 					(*m_bodyParts.back()->GetMoveDirection()) *
-					m_bodyParts.back()->GetSprite()->height);
-				Cell& forwardCell = a_pGrid->GetCell(&forwardPosition);
+					(float)m_bodyParts.back()->GetSprite()->height);
+				Cell* forwardCell = nullptr;
+				forwardCell = &a_pGrid->GetCell(&forwardPosition);
 
 				// Create a mushroom forward of the centipede part that was hit
 				// if the cell isn't already occupied by a mushroom.
-				if (!forwardCell.GetMushroom())
+				if (!forwardCell->GetMushroom())
 				{
-					forwardCell.SpawnMushroom();
+					forwardCell->SpawnMushroom();
 				}
 			}
 			else if (*m_bodyParts.back()->GetMoveDirection() == m_moveDirection.Up() ||
@@ -541,7 +530,7 @@ void CentipedeHead::Split(Grid* a_pGrid, CentipedeBody* a_pSplitPoint)
 					a_pGrid->GetCell(&right).SpawnMushroom();
 				}
 			}
-			
+
 			// Destroys the body part that was hit by a bolt.
 			delete m_bodyParts.back();
 			m_bodyParts.back() = nullptr;
@@ -636,7 +625,7 @@ void CentipedeHead::DestroyThis(GameplayState* a_pState,
 				// Spawn a mushroom forward of this head's position.
 				a_pGrid->GetCell(&forward).SpawnMushroom();
 			}
-			else if (m_moveDirection == m_moveDirection.Up() ||	m_moveDirection == m_moveDirection.Down())
+			else if (m_moveDirection == m_moveDirection.Up() || m_moveDirection == m_moveDirection.Down())
 			{
 				if (m_lastHorizontalDirection == MOVE_DIRECTIONS::MOVE_DIRECTIONS_LEFT)
 				{

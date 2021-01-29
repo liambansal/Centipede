@@ -168,9 +168,9 @@ void CentipedeManager::SpawnCentipede(Grid* a_pGrid)
 				// boundary positions, using the centipede sprite as a margin.
 				Vector2D spawnPosition = Vector2D(m_numberGenerator.
 					GetRandomFloat((float)a_pGrid->
-						GetRightBoundary(pHead->GetSprite()->height / 2)),
+						GetRightBoundary(pHead->GetSprite()->height * 0.5f)),
 					(float)a_pGrid->
-					GetUpperBoundary(pHead->GetSprite()->height / 2));
+					GetUpperBoundary(pHead->GetSprite()->height * 0.5f));
 				pHead->SetPosition(a_pGrid->GetCell(&spawnPosition).GetPosition());
 				// Set how many bodies will follow after the head.
 				pHead->SetManager(this);
@@ -188,8 +188,8 @@ void CentipedeManager::SpawnCentipede(Grid* a_pGrid)
 			// Generate a semi-random spawn position using the grid's top and right 
 			// boundary positions, using the centipede sprite as a margin.
 			Vector2D spawnPosition(m_numberGenerator.GetRandomFloat((float)a_pGrid->
-				GetRightBoundary(pCentipedeHead->GetSprite()->height / 2)),
-				(float)a_pGrid->GetUpperBoundary(pCentipedeHead->GetSprite()->height / 2));
+				GetRightBoundary(pCentipedeHead->GetSprite()->height * 0.5f)),
+				(float)a_pGrid->GetUpperBoundary(pCentipedeHead->GetSprite()->height * 0.5f));
 			pCentipedeHead->SetPosition(a_pGrid->GetCell(&spawnPosition).GetPosition());
 			// Set how many bodies will follow after the head.
 			pCentipedeHead->CreateBody(a_pGrid, m_uiCentipedeLength);

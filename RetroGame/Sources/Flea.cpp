@@ -14,7 +14,7 @@
 
 Flea::Flea() : Enemy(),
 	mc_uiMoveSprites(2),
-	mc_fMushroomSpawnChance(4.0f),
+	mc_fMushroomSpawnChance(6.0f),
 	m_pFleaManager(nullptr)
 {
 	m_uiScoreValue = 50;
@@ -94,12 +94,12 @@ void Flea::CheckCollisions(GameplayState* a_pGameplayState,
 		// Screen origin starts at top left corner. Y axis increases downwards. X 
 		// axis increases to the right.
 		// Check if y position is greater than the grid's bottom boundary.
-		if (m_position.GetY() > a_pGrid->GetLowerBoundary(m_pSprite->height / 2))
+		if (m_position.GetY() > a_pGrid->GetLowerBoundary(m_pSprite->height * 0.5f))
 		{
 			Destroy(a_pGrid);
 		}
 		// Check if y position is lower than the grid's top boundary.
-		else if (m_position.GetY() < a_pGrid->GetUpperBoundary(m_pSprite->height / 2))
+		else if (m_position.GetY() < a_pGrid->GetUpperBoundary(m_pSprite->height * 0.5f))
 		{
 			Destroy(a_pGrid);
 		}
@@ -123,12 +123,11 @@ void Flea::UpdateOccupiedCell(Grid* a_pGrid)
 		}
 
 		RandGenerator randGenerator;
-		const float maximumReturnValue = 100.0f;
+		const float maxReturnValue = 100.0f;
 
 		// For each new cell that the flea moves into; spawn a mushroom if the 
 		// semi-random float is less than the spawn chance.
-		if (randGenerator.GetRandomFloat(maximumReturnValue) <
-			mc_fMushroomSpawnChance)
+		if (randGenerator.GetRandomFloat(maxReturnValue) < mc_fMushroomSpawnChance)
 		{
 			a_pGrid->GetCell(&m_position).SpawnMushroom();
 		}
@@ -138,8 +137,7 @@ void Flea::UpdateOccupiedCell(Grid* a_pGrid)
 		a_pGrid->GetCell(&m_position).SetTag("Flea");
 		// Update the flea previous occupied cell's position with 
 		// the position of the one its currently occupying.
-		m_pPreviousCellsPosition =
-			(Vector2D*)a_pGrid->GetCell(&m_position).GetPosition();
+		m_pPreviousCellsPosition = (Vector2D*)a_pGrid->GetCell(&m_position).GetPosition();
 	}
 }
 

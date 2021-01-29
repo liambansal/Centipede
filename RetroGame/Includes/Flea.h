@@ -41,7 +41,7 @@ public:
 private:
 	// Variables.
 	const unsigned int mc_uiMoveSprites;
-	float mc_fMushroomSpawnChance;
+	const float mc_fMushroomSpawnChance;
 	Animator m_animator;
 	FleaManager* m_pFleaManager;
 };

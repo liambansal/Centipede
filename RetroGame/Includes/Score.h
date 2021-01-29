@@ -6,11 +6,9 @@
 #ifndef SCORE_H
 #define SCORE_H
 
-// Includes.
 #include <string>
 #include "Vector2D.h"
 
-// Forward Declarations.
 class BugBlaster;
 class GameStateManager;
 class Vector2D;
@@ -18,9 +16,7 @@ class Vector2D;
 class Score
 {
 public:
-	// Constructor.
 	Score();
-	// Destructor.
 	~Score();
 
 	// Increases the players score by a set amount and checks if they should 
@@ -39,12 +35,9 @@ public:
 	unsigned int GetScore() const;
 
 private:
-	// Variables.
-	// The players score.
+	// Score needed to gain extra life.
+	const unsigned int mc_uiLifeMilestone;
 	unsigned int m_uiScore;
-	signed int m_siScoreToNextMilestone;
-	// Necessary score to add an extra life.
-	unsigned int m_uiLifeMilestone;
 	std::string m_scorePrefix;
 	Vector2D m_position;
 	GameStateManager* m_pStateManager;

@@ -38,6 +38,7 @@ GameplayState::~GameplayState()
 // Sets up the gameplay state with its grid, bug blaster and enemy managers.
 void GameplayState::Initialize(MenuState* a_pMenuState)
 {
+
 	if (m_pManager && a_pMenuState)
 	{
 		m_bIsActive = true;
@@ -126,7 +127,7 @@ void GameplayState::Draw()
 	if (m_pManager && m_pGrid)
 	{
 		// Clears previously drawn sprites.
-		m_pManager->Clear(olc::BLACK); // TODO: do I need this
+		m_pManager->Clear(olc::BLACK);
 		// Enables alpha blending.
 		m_pManager->SetPixelMode(olc::Pixel::ALPHA);
 

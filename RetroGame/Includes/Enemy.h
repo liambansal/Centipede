@@ -32,7 +32,7 @@ public:
 	void DecreaseHealth();
 	void SetPosition(const Vector2D* a_position);
 	// Set a new target cell to move towards.
-	void SetTargetCell(Grid* a_pGrid);
+	virtual void SetTargetCell(Grid* a_pGrid);
 	Vector2D* GetCurrentPosition();
 	Vector2D* GetPreviousPosition();
 	olc::Sprite* GetSprite() const;

@@ -31,10 +31,8 @@ void Enemy::Draw(GameplayState* a_pGameplayState)
 {
 	if (m_pSprite && a_pGameplayState)
 	{
-		a_pGameplayState->GetManager()->DrawSprite((int32_t)m_position.GetX() -
-			m_pSprite->width / 2,
-			(int32_t)m_position.GetY() -
-			m_pSprite->height / 2,
+		a_pGameplayState->GetManager()->DrawSprite((int32_t)m_position.GetX() - m_pSprite->width * 0.5f,
+			(int32_t)m_position.GetY() - m_pSprite->height * 0.5f,
 			m_pSprite);
 	}
 }
@@ -63,20 +61,19 @@ void Enemy::SetTargetCell(Grid* a_pGrid)
 	if (m_pSprite && a_pGrid)
 	{
 		// The position that we want to move to.
-		Vector2D m_targetPosition = m_position + (m_moveDirection *
-			(const float)m_pSprite->height);
+		Vector2D targetPosition = m_position + (m_moveDirection * (const float)m_pSprite->height);
 		Clamp clamp;
 		// Clamp the target position's coordinates so they lay within the 
 		// grid's boundaries. Coordinates outside the grid's boundaries may 
-		// retreive the wrong cell.
+		// retrieve the wrong cell.
 		// Always use unsigned coordinate values when setting target cell.
-		m_targetPosition.SetX(clamp.ClampFloat(m_targetPosition.GetX(),
+		targetPosition.SetX(clamp.ClampFloat(targetPosition.GetX(),
 			(float)a_pGrid->GetXOrigin(),
 			(float)a_pGrid->GetXOrigin() + a_pGrid->GetPixelWidth()));
-		m_targetPosition.SetY(clamp.ClampFloat(m_targetPosition.GetY(),
+		targetPosition.SetY(clamp.ClampFloat(targetPosition.GetY(),
 			(float)a_pGrid->GetYOrigin(),
 			(float)a_pGrid->GetYOrigin() + a_pGrid->GetPixelHeight()));
-		m_pTargetCell = &a_pGrid->GetCell(&m_targetPosition);
+		m_pTargetCell = &a_pGrid->GetCell(&targetPosition);
 	}
 }
 

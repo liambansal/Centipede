@@ -80,7 +80,6 @@ bool GameStateManager::OnUserUpdate(float a_deltaTime)
 		}
 
 		Draw();
-
 		m_bStatesChanged = false;
 		return true;
 	}
@@ -105,7 +104,7 @@ void GameStateManager::StatesChanged(bool a_bool)
 	m_bStatesChanged = a_bool;
 }
 
-// Will close the application.
+// Closes the application.
 void GameStateManager::Quit()
 {
 	m_bExitGame = true;

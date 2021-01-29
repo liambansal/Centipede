@@ -68,28 +68,28 @@ void Cell::Draw(GameplayState* a_pState, Grid* grid)
 						// Draws a black pixel at (x, y) from the cell's
 						// position starting at the top left corner of the cell.
 						a_pState->GetManager()->
-							olc::PixelGameEngine::Draw((int32_t)((((int)m_position.GetX()) - mc_uiWidth / 2) + x),
-								(int32_t)((((int)m_position.GetY()) - mc_uiHeight / 2) + y),
+							olc::PixelGameEngine::Draw((int32_t)((((int)m_position.GetX()) - mc_uiWidth * 0.5f) + x),
+								(int32_t)((((int)m_position.GetY()) - mc_uiHeight * 0.5f) + y),
 								olc::BLACK);
 					}
 					// If there's a pixel in the sprite and it doesn't match 
 					// the pixel on the grid at the cell's position then we need to redraw the sprite in that cell.
 					else if (GetPosition() &&
 						m_pMushroom->GetSprite()->GetPixel(x, y) != GetPixel(nullptr,
-						((int)GetPosition()->GetX() - mc_uiWidth / 2) + x,
-						((int)GetPosition()->GetY() - mc_uiHeight / 2) + y))
+						((int)GetPosition()->GetX() - mc_uiWidth * 0.5f) + x,
+						((int)GetPosition()->GetY() - mc_uiHeight * 0.5f) + y))
 					{
 						// Draws the mushroom's sprite at the mushroom's position starting from the top left corner.
-						a_pState->GetManager()->olc::PixelGameEngine::Draw((int32_t)((((int)m_pMushroom->GetPosition().GetX()) - mc_uiWidth / 2) + x),
-							(int32_t)((((int)m_pMushroom->GetPosition().GetY()) - mc_uiHeight / 2) + y),
+						a_pState->GetManager()->olc::PixelGameEngine::Draw((int32_t)((((int)m_pMushroom->GetPosition().GetX()) - mc_uiWidth * 0.5f) + x),
+							(int32_t)((((int)m_pMushroom->GetPosition().GetY()) - mc_uiHeight * 0.5f) + y),
 							m_pMushroom->GetSprite()->GetPixel(x, y));
 					}
 				}
 				else
 				{
 					// Draws a black pixel at (x, y) from the cell's position starting at the top left corner of the cell.
-					a_pState->GetManager()->olc::PixelGameEngine::Draw((int32_t)((((int)m_position.GetX()) - mc_uiWidth / 2) + x),
-						(int32_t)((((int)m_position.GetY()) - mc_uiHeight / 2) + y), olc::BLACK);
+					a_pState->GetManager()->olc::PixelGameEngine::Draw((int32_t)((((int)m_position.GetX()) - mc_uiWidth * 0.5f) + x),
+						(int32_t)((((int)m_position.GetY()) - mc_uiHeight * 0.5f) + y), olc::BLACK);
 				}
 			}
 		}

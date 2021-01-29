@@ -9,8 +9,7 @@
 #include "GameStateManager.h"
 
 Score::Score() : m_uiScore(0),
-	m_siScoreToNextMilestone(12000),
-	m_uiLifeMilestone(12000),
+	mc_uiLifeMilestone(12000),
 	m_scorePrefix("Score: "),
 	m_position(),
 	m_pStateManager(nullptr),
@@ -21,18 +20,17 @@ Score::~Score()
 {}
 
 // Increases the players score by a set amount and checks if they should 
-// recieve extra lives.
+// receive extra lives.
 void Score::Update(const unsigned int a_addition)
 {
 	if (m_pBugBlaster)
 	{
 		m_uiScore += a_addition;
-		m_siScoreToNextMilestone -= a_addition;
+		int myScore = m_uiScore % mc_uiLifeMilestone;
 
-		if (m_siScoreToNextMilestone <= 0)
+		if (myScore == 0)
 		{
 			m_pBugBlaster->AddLife();
-			m_siScoreToNextMilestone = m_uiLifeMilestone;
 		}
 	}
 }

@@ -16,23 +16,23 @@
 using namespace olc;
 
 BugBlaster::BugBlaster(Grid* a_pGrid) : mc_uiMoveSprites(1),
-	mc_uiFireSprites(1),
-	mc_uiDeathSprites(4),
-	mc_uiMaxLives(6),
-	m_uiLives(3),
-	m_uiBoltCounter(0),
-	m_fMovementSpeed(110.0f),
-	m_fMaxReloadTime(0.45f),
-	m_fReloadTime(0.0f),
-	m_bCanFire(true),
-	m_bIsAlive(true),
-	mc_cpMoveSprite("Move"),
-	mc_cpFiredSprite("Fired"),
-	mc_cpDeathAnimation("Death"),
-	m_livesPrefix("Lives: "),
-	m_spawnPosition(128.0f, 216.0f),
-	m_position(m_spawnPosition),
-	m_pSprite(new Sprite("Resources/Sprites/Bug Blaster/Bug Blaster (1).png"))
+mc_uiFireSprites(1),
+mc_uiDeathSprites(4),
+mc_uiMaxLives(6),
+m_uiLives(3),
+m_uiBoltCounter(0),
+m_fMovementSpeed(110.0f),
+m_fMaxReloadTime(0.45f),
+m_fReloadTime(0.0f),
+m_bCanFire(true),
+m_bIsAlive(true),
+mc_cpMoveSprite("Move"),
+mc_cpFiredSprite("Fired"),
+mc_cpDeathAnimation("Death"),
+m_livesPrefix("Lives: "),
+m_spawnPosition(128.0f, 216.0f),
+m_position(m_spawnPosition),
+m_pSprite(new Sprite("Resources/Sprites/Bug Blaster/Bug Blaster (1).png"))
 {
 	m_animator.AddFrame(mc_cpMoveSprite,
 		new olc::Sprite("Resources/Sprites/Bug Blaster/Bug Blaster (1).png"));
@@ -58,7 +58,7 @@ BugBlaster::~BugBlaster()
 void BugBlaster::Update(GameplayState* a_pState,
 	float* a_pDeltaTime,
 	Grid* a_pGrid)
-{	
+{
 	if (a_pState && a_pState->GetManager()) // Null check pointers.
 	{
 		if (m_bIsAlive)
@@ -67,7 +67,7 @@ void BugBlaster::Update(GameplayState* a_pState,
 			CalculateFireRate(a_pGrid);
 			ClampPosition(a_pGrid);
 			CheckForCollisions(a_pGrid);
-			
+
 			// Update our bolts.
 			for (int i = 0; i < sizeof(m_bolts) / sizeof(Bolt); ++i)
 			{
@@ -136,7 +136,7 @@ void BugBlaster::HandleInput(GameplayState* a_pState, float* a_pDeltaTime)
 		// Check input for firing bolts.
 		if (m_bCanFire &&
 			(a_pState->GetManager()->GetKey(Key::ENTER).bHeld ||
-			a_pState->GetManager()->GetKey(Key::ENTER).bPressed))
+				a_pState->GetManager()->GetKey(Key::ENTER).bPressed))
 		{
 			Fire(a_pState, a_pDeltaTime);
 			m_bCanFire = false;
@@ -152,9 +152,8 @@ void BugBlaster::DrawSprite(GameplayState* a_pState) const
 	{
 		// Draws the bug blaster sprite and offsets the sprite from the 
 		// position, so the position is at the center of the sprite.
-		a_pState->GetManager()->DrawSprite((int32_t)(m_position.GetX() -
-			(m_pSprite->width / 2)),
-			(int32_t)(m_position.GetY() - (m_pSprite->height / 2)), 
+		a_pState->GetManager()->DrawSprite((int32_t)(m_position.GetX() - (m_pSprite->width * 0.5f)),
+			(int32_t)(m_position.GetY() - (m_pSprite->height * 0.5f)),
 			m_pSprite);
 	}
 }
@@ -208,30 +207,30 @@ void BugBlaster::ClampPosition(Grid* a_pGrid)
 		// Screen origin starts at top left corner. Y axis increases downwards. X 
 		// axis increases to the right.
 		// Check if x position is greater than the grid's right boundary.
-		if (m_position.GetX() > a_pGrid->GetRightBoundary(m_pSprite->height / 2))
+		if (m_position.GetX() > a_pGrid->GetRightBoundary(m_pSprite->height * 0.5f))
 		{
-			m_position.SetX((const float)a_pGrid->GetRightBoundary(m_pSprite->height / 2));
+			m_position.SetX((const float)a_pGrid->GetRightBoundary(m_pSprite->height * 0.5f));
 		}
 		// Check if x position is lower than the grid's left boundary.
-		else if (m_position.GetX() < a_pGrid->GetLeftBoundary(m_pSprite->height / 2))
+		else if (m_position.GetX() < a_pGrid->GetLeftBoundary(m_pSprite->height * 0.5f))
 		{
-			m_position.SetX((const float)a_pGrid->GetLeftBoundary(m_pSprite->height / 2));
+			m_position.SetX((const float)a_pGrid->GetLeftBoundary(m_pSprite->height * 0.5f));
 		}
 
 		float noMovementZoneHeight = a_pGrid->GetNoMovementZone()->GetY();
 
 		// Check if y position is greater than the grid's top boundary plus the no 
 		// movement zone's height.
-		if (m_position.GetY() < a_pGrid->GetUpperBoundary(m_pSprite->height / 2) +
+		if (m_position.GetY() < a_pGrid->GetUpperBoundary(m_pSprite->height * 0.5f) +
 			noMovementZoneHeight)
 		{
-			m_position.SetY((const float)a_pGrid->GetUpperBoundary(m_pSprite->height / 2) +
+			m_position.SetY((const float)a_pGrid->GetUpperBoundary(m_pSprite->height * 0.5f) +
 				noMovementZoneHeight);
 		}
 		// Check if y position is lower than the grid's bottom boundary.
-		else if (m_position.GetY() > a_pGrid->GetLowerBoundary(m_pSprite->height / 2))
+		else if (m_position.GetY() > a_pGrid->GetLowerBoundary(m_pSprite->height * 0.5f))
 		{
-			m_position.SetY((const float)a_pGrid->GetLowerBoundary(m_pSprite->height / 2));
+			m_position.SetY((const float)a_pGrid->GetLowerBoundary(m_pSprite->height * 0.5f));
 		}
 	}
 }
@@ -337,14 +336,15 @@ void BugBlaster::CalculateFireRate(Grid* a_pGrid)
 			y > 1;
 			--y)
 		{
-			const Cell& examinedCell =
-				a_pGrid->GetCell((int)m_position.GetX() / a_pGrid->GetCellHeight(), y);
+			Cell* pExaminedCell = nullptr;
+			pExaminedCell = &a_pGrid->GetCell((int)m_position.GetX() / a_pGrid->GetCellHeight(), y);
 
 			// Stops when its finds an occupied cell.
 			if (a_pGrid->GetCell(&m_position).GetPosition() &&
-				examinedCell.GetTag() != "Empty Cell")
+				pExaminedCell != nullptr &&
+				pExaminedCell->GetTag() != "Empty Cell")
 			{
-				if (examinedCell.GetTag() == "Centipede")
+				if (pExaminedCell->GetTag() == "Centipede")
 				{
 					float centipedeReloadTime = 0.16f;
 					m_fMaxReloadTime = centipedeReloadTime;
@@ -356,7 +356,7 @@ void BugBlaster::CalculateFireRate(Grid* a_pGrid)
 				// A shorter distance leads to a shorter reload time.
 				m_fMaxReloadTime =
 					((a_pGrid->GetCell(&m_position).GetPosition()->GetY() -
-						examinedCell.GetPosition()->GetY()) /
+						pExaminedCell->GetPosition()->GetY()) /
 						a_pGrid->GetCellHeight() /
 						a_pGrid->GetHeight());
 				m_fMaxReloadTime /= 2;
